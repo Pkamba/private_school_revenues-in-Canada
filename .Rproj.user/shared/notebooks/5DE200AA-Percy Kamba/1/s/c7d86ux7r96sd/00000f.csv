@@ -1,0 +1,19 @@
+"0","# Download the dataset"
+"0","temp_file <- tempfile()"
+"0","download.file(""https://www150.statcan.gc.ca/n1/tbl/csv/37100084-eng.zip"", temp_file)"
+"2","trying URL 'https://www150.statcan.gc.ca/n1/tbl/csv/37100084-eng.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 41099 bytes (40 KB)
+"
+"2","downloaded 40 KB
+
+"
+"0","private_data <- read_csv(unz(temp_file, ""37100084.csv""))"
+"0","unlink(temp_file)  # Remove temp file"
+"0",""
+"0","# Organize data"
+"0","private <- private_data %>%"
+"0","  mutate(Year = as.Date(paste0(substr(REF_DATE, 1, 4), ""-01-01""))) %>%"
+"0","  rename(Revenue = VALUE) %>%"
+"0","  select(Year, Revenue)"

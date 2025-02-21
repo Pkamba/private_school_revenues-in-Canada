@@ -1,0 +1,48 @@
+name: Render and Publish RMarkdown Report
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  push:
+    branches:
+      - main  # Runs when changes are pushed to main
+  workflow_dispatch:  # Allows manual execution
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.1.2'
+
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
+      - name: Install R Packages (Ensure tidyverse is installed)
+        run: |
+          Rscript -e 'install.packages("tidyverse", dependencies = TRUE, repos="http://cran.rstudio.com/")'
+          Rscript -e 'install.packages(c("lubridate", "ggplot2", "rmarkdown", "knitr", "dplyr", "readr"), repos="http://cran.rstudio.com/")'
+
+      - name: Render RMarkdown to HTML
+        run: |
+          Rscript -e 'rmarkdown::render("Project_Percy.Rmd", output_format = "html_document")'
+
+      - name: Move Report to `docs/`
+        run: |
+          mkdir -p docs
+          mv Project_Percy.html docs/index.html
+
+      - name: Commit and Push Report
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add docs/index.html
+          git commit -m "Updated RMarkdown report for GitHub Pages"
+          git push

@@ -1,0 +1,5 @@
+"0","ggplot(private, aes(x = Year, y = Revenue)) +"
+"0","  geom_col(fill = ""black"") +"
+"0","  ggtitle(""Private School Revenues from Board & Lodging Fees"") +"
+"0","  labs(x = ""Year"", y = ""Revenue (CAD)"") +"
+"0","  theme_minimal()"
