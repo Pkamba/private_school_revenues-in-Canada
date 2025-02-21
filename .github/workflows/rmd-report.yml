@@ -5,7 +5,7 @@ on:
     - cron: '0 0 * * *'  # Runs daily at midnight UTC
   push:
     branches:
-      - main
+      - main  # Runs when changes are pushed to main
   workflow_dispatch:  # Allows manual execution
 
 jobs:
@@ -20,9 +20,15 @@ jobs:
         with:
           r-version: '4.1.2'
 
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
       - name: Install R Packages
         run: |
-          Rscript -e 'install.packages(c("tidyverse", "lubridate", "ggplot2", "rmarkdown"))'
+          Rscript -e 'install.packages("remotes")'
+          Rscript -e 'remotes::install_cran(c("tidyverse", "lubridate", "ggplot2", "rmarkdown"))'
 
       - name: Render RMarkdown to HTML
         run: |
