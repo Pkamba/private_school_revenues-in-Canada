@@ -25,15 +25,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pandoc
 
-      - name: Install R Packages
+      - name: Install R Packages (Ensure tidyverse is installed)
         run: |
           Rscript -e 'install.packages("remotes")'
           Rscript -e 'remotes::install_cran(c("tidyverse", "lubridate", "ggplot2", "rmarkdown", "knitr", "dplyr", "readr"))'
           Rscript -e 'install.packages("tidyverse", dependencies=TRUE)'
+          Rscript -e 'if (!requireNamespace("tidyverse", quietly = TRUE)) { install.packages("tidyverse") }'
 
       - name: Verify Installed Packages
         run: |
-          Rscript -e 'installed.packages()[,1]'
+          Rscript -e 'print(installed.packages()[,1])'
 
       - name: Render RMarkdown to HTML
         run: |
