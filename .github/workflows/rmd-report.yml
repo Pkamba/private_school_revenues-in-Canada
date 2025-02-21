@@ -28,7 +28,12 @@ jobs:
       - name: Install R Packages
         run: |
           Rscript -e 'install.packages("remotes")'
-          Rscript -e 'remotes::install_cran(c("tidyverse", "lubridate", "ggplot2", "rmarkdown"))'
+          Rscript -e 'remotes::install_cran(c("tidyverse", "lubridate", "ggplot2", "rmarkdown", "knitr", "dplyr", "readr"))'
+          Rscript -e 'install.packages("tidyverse", dependencies=TRUE)'
+
+      - name: Verify Installed Packages
+        run: |
+          Rscript -e 'installed.packages()[,1]'
 
       - name: Render RMarkdown to HTML
         run: |
